@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9; /* Лёгкий фон */
+    margin: 0;
+    padding: 20px;
+    text-align: center; /* Центровка контента */
+}
+
+h1 {
+    color: #333;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+table {
+    margin: 20px auto; /* Центрирование таблицы */
+    border-collapse: collapse; /* Убираем промежутки между ячейками */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+}
+
+td {
+    width: 100px;
+    height: 100px;
+    font-size: 36px; /* Крупный текст */
+    text-align: center; /* Центровка текста */
+    vertical-align: middle; /* Центровка по вертикали */
+    border: 2px solid #009879; /* Яркие границы */
+    cursor: pointer; /* Курсор руки при наведении */
+    background-color: #fff; /* Белый фон */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Анимация */
+}
+
+td:hover {
+    background-color: #f0f8ff; /* Лёгкий голубой фон при наведении */
+    transform: scale(1.05); /* Небольшое увеличение */
+}
+
+hr {
+    border: 1px solid #ccc;
+    margin: 20px auto;
+    width: 80%;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #009879; /* Яркая кнопка */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00795a; /* Тёмный оттенок при наведении */
+}
+
