@@ -28,13 +28,11 @@ public class LogicServlet extends HttpServlet {
             return;
         }
 
-        // Ход игрока
         field.getField().put(index, Sign.CROSS);
         if (checkWin(resp, currentSession, field)) {
             return;
         }
 
-        // Ход компьютера
         int emptyFieldIndex = getBestMove(field);
         if (emptyFieldIndex >= 0) {
             field.getField().put(emptyFieldIndex, Sign.NOUGHT);
@@ -42,7 +40,6 @@ public class LogicServlet extends HttpServlet {
                 return;
             }
         } else {
-            // Если нет доступных ходов, значит ничья
             currentSession.setAttribute("draw", true);
             List<Sign> data = field.getFieldData();
             currentSession.setAttribute("data", data);
@@ -77,7 +74,6 @@ public class LogicServlet extends HttpServlet {
             currentSession.setAttribute("field", newField);
             return newField;
         }
-
         return (Field) fieldAttribute;
     }
 

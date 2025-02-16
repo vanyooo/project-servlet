@@ -25,13 +25,6 @@ public class Field {
         return field;
     }
 
-    public int getEmptyFieldIndex() {
-        return field.entrySet().stream()
-                .filter(e -> e.getValue() == Sign.EMPTY)
-                .map(Map.Entry::getKey)
-                .findFirst().orElse(-1);
-    }
-
     public List<Sign> getFieldData() {
         return field.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
@@ -63,9 +56,4 @@ public class Field {
     public boolean isFull() {
         return field.values().stream().noneMatch(sign -> sign == Sign.EMPTY);
     }
-
-    public boolean isEmpty() {
-        return getField().values().stream().allMatch(sign -> sign == Sign.EMPTY);
-    }
-
 }
