@@ -59,4 +59,13 @@ public class Field {
         }
         return Sign.EMPTY;
     }
+
+    public boolean isFull() {
+        return field.values().stream().noneMatch(sign -> sign == Sign.EMPTY);
+    }
+
+    public boolean isEmpty() {
+        return getField().values().stream().allMatch(sign -> sign == Sign.EMPTY);
+    }
+
 }

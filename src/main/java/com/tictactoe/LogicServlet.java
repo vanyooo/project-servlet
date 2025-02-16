@@ -16,35 +16,41 @@ public class LogicServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         HttpSession currentSession = req.getSession();
         Field field = extractField(currentSession);
+
         int index = getSelectedIndex(req);
         Sign currentSign = field.getField().get(index);
+
         if (Sign.EMPTY != currentSign) {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
             dispatcher.forward(req, resp);
             return;
         }
+
+        // Ход игрока
         field.getField().put(index, Sign.CROSS);
         if (checkWin(resp, currentSession, field)) {
             return;
         }
-        int emptyFieldIndex = field.getEmptyFieldIndex();
+
+        // Ход компьютера
+        int emptyFieldIndex = getBestMove(field);
         if (emptyFieldIndex >= 0) {
             field.getField().put(emptyFieldIndex, Sign.NOUGHT);
             if (checkWin(resp, currentSession, field)) {
                 return;
             }
         } else {
+            // Если нет доступных ходов, значит ничья
             currentSession.setAttribute("draw", true);
             List<Sign> data = field.getFieldData();
             currentSession.setAttribute("data", data);
             resp.sendRedirect("/index.jsp");
             return;
         }
-        List<Sign> data = field.getFieldData();
 
+        List<Sign> data = field.getFieldData();
         currentSession.setAttribute("data", data);
         currentSession.setAttribute("field", field);
 
@@ -59,7 +65,7 @@ public class LogicServlet extends HttpServlet {
 
     private Field extractField(HttpSession currentSession) {
         Object fieldAttribute = currentSession.getAttribute("field");
-        if (Field.class != fieldAttribute.getClass()) {
+        if (!(fieldAttribute instanceof Field)) {
             currentSession.invalidate();
             throw new RuntimeException("Session is broken, try one more time");
         }
@@ -76,5 +82,59 @@ public class LogicServlet extends HttpServlet {
             return true;
         }
         return false;
+    }
+
+    private int getBestMove(Field field) {
+        int bestScore = Integer.MIN_VALUE;
+        int bestMove = -1;
+
+        for (int i = 0; i < 9; i++) {
+            if (field.getField().get(i) == Sign.EMPTY) {
+                field.getField().put(i, Sign.NOUGHT);
+                int score = minimax(field, false);
+                field.getField().put(i, Sign.EMPTY);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = i;
+                }
+            }
+        }
+
+        return bestMove;
+    }
+
+    private int minimax(Field field, boolean isMaximizing) {
+        Sign winner = field.checkWin();
+        if (winner == Sign.NOUGHT) {
+            return 10;
+        } else if (winner == Sign.CROSS) {
+            return -10;
+        } else if (field.isFull()) {
+            return 0;
+        }
+        if (isMaximizing) {
+            int bestScore = Integer.MIN_VALUE;
+            for (int i = 0; i < 9; i++) {
+                if (field.getField().get(i) == Sign.EMPTY) {
+                    field.getField().put(i, Sign.NOUGHT);
+                    int score = minimax(field, false);
+                    field.getField().put(i, Sign.EMPTY);
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+            return bestScore;
+        } else {
+            int bestScore = Integer.MAX_VALUE;
+            for (int i = 0; i < 9; i++) {
+                if (field.getField().get(i) == Sign.EMPTY) {
+                    field.getField().put(i, Sign.CROSS);
+                    int score = minimax(field, true);
+                    field.getField().put(i, Sign.EMPTY);
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+            return bestScore;
+        }
     }
 }
