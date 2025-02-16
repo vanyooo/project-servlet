@@ -64,11 +64,20 @@ public class LogicServlet extends HttpServlet {
     }
 
     private Field extractField(HttpSession currentSession) {
+//        Object fieldAttribute = currentSession.getAttribute("field");
+//        if (!(fieldAttribute instanceof Field)) {
+//            currentSession.invalidate();
+//            throw new RuntimeException("Session is broken, try one more time");
+//        }
+//        return (Field) fieldAttribute;
         Object fieldAttribute = currentSession.getAttribute("field");
+
         if (!(fieldAttribute instanceof Field)) {
-            currentSession.invalidate();
-            throw new RuntimeException("Session is broken, try one more time");
+            Field newField = new Field();
+            currentSession.setAttribute("field", newField);
+            return newField;
         }
+
         return (Field) fieldAttribute;
     }
 
